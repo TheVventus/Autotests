@@ -11,10 +11,18 @@ use Facebook\WebDriver\WebDriverBy;
  
 class GoogleSearchChromeTest extends TestCase {
  
-  protected $webDriver;
+  protected $driver;
 
   public function build_chrome_capabilities() {
     $capabilities = DesiredCapabilities::chrome();
+
+    // Здесь можно задать настройки для браузера
+    $chromeOptions = new ChromeOptions();
+    $chromeOptions->addArguments([
+      '-headless'
+    ]);
+    $capabilities->setCapability(ChromeOptions::CAPABILITY, $chromeOptions);
+
     return $capabilities;
   }
 
@@ -23,29 +31,29 @@ class GoogleSearchChromeTest extends TestCase {
     /* Download the Selenium Server 3.141.59 from 
     https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar
     */
-    $this->webDriver = RemoteWebDriver::create('http://localhost:8090/wd/hub', $capabilities);
+    $this->driver = RemoteWebDriver::create('http://localhost:8090/wd/hub', $capabilities);
   }
  
   public function tearDown(): void {
-    $this->webDriver->quit();
+    $this->driver->quit();
   }
   /*
   * @test
   */ 
   public function test_searchTextOnGoogle() {
-    $this->webDriver->get("https://www.google.com/ncr");
-    $this->webDriver->manage()->window()->maximize();
+    $this->driver->get("https://www.google.com/ncr");
+    $this->driver->manage()->window()->maximize();
     
     sleep(5);
     
-    $element = $this->webDriver->findElement(WebDriverBy::name("q"));
+    $element = $this->driver->findElement(WebDriverBy::name("q"));
     if($element) {
       $element->sendKeys("LambdaTest");
       $element->submit();
     }
     
-    print $this->webDriver->getTitle();
-    $this->assertEquals('LambdaTest - Google Search', $this->webDriver->getTitle());
+    print $this->driver->getTitle();
+    $this->assertEquals('LambdaTest - Google Search', $this->driver->getTitle());
   }
 }
  
