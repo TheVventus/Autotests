@@ -5,6 +5,9 @@ use Facebook\WebDriver\WebDriverBy;
 
 class HomeTest extends BaseTest {
 
+    /**
+      * @test
+      */
     public function test_searchTextOnGoogle() {
         $this->driver->get("https://www.google.com/ncr");
         $this->driver->manage()->window()->maximize();
